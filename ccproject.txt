@@ -1,0 +1,194 @@
+# Data Preprocessing
+
+import pandas as pd
+import numpy as np
+
+# Load dataset
+df = pd.read_csv("/content/creditcard.csv")
+
+# Check dataset
+print(df.head())
+print("Shape:", df.shape)
+print("\nClass values:")
+print(df["Class"].value_counts(dropna=False))
+
+# Remove rows where target Class is missing
+df = df.dropna(subset=["Class"])
+
+# Features and target
+X = df.drop("Class", axis=1)
+y = df["Class"]
+
+# Split the dataset
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X,
+    y,
+    test_size=0.2,
+    random_state=42,
+    stratify=y
+)
+
+# Feature Scaling
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+print("\nPreprocessing completed successfully!")
+print("Training data:", X_train_scaled.shape)
+print("Testing data:", X_test_scaled.shape)
+#Linear Regression
+
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import accuracy_score, classification_report
+
+model = LinearRegression()
+
+model.fit(X_train_scaled, y_train)
+
+# Prediction
+y_pred = model.predict(X_test_scaled)
+
+# Convert continuous values into 0 and 1
+y_pred_class = (y_pred >= 0.5).astype(int)
+
+print("Accuracy:", accuracy_score(y_test, y_pred_class))
+print(classification_report(y_test, y_pred_class))
+
+#Logistic Regression
+
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report
+
+model = LogisticRegression(max_iter=1000)
+
+model.fit(X_train_scaled, y_train)
+
+y_pred = model.predict(X_test_scaled)
+
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print(classification_report(y_test, y_pred))
+
+
+#KNN
+
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score, classification_report
+
+model = KNeighborsClassifier(n_neighbors=5)
+
+model.fit(X_train_scaled, y_train)
+
+y_pred = model.predict(X_test_scaled)
+
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print(classification_report(y_test, y_pred))
+
+
+#SVM
+
+
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score, classification_report
+
+model = SVC(kernel="rbf")
+
+model.fit(X_train_scaled, y_train)
+
+y_pred = model.predict(X_test_scaled)
+
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print(classification_report(y_test, y_pred))
+
+
+#Naive Bayes
+
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score, classification_report
+
+model = GaussianNB()
+
+model.fit(X_train_scaled, y_train)
+
+y_pred = model.predict(X_test_scaled)
+
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print(classification_report(y_test, y_pred))
+
+
+
+#Random Forest
+
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, classification_report
+
+model = RandomForestClassifier(
+    n_estimators=100,
+    random_state=42
+)
+
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print(classification_report(y_test, y_pred))
+
+
+#Decision Tree
+
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score, classification_report
+
+model = DecisionTreeClassifier(
+    random_state=42
+)
+
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print(classification_report(y_test, y_pred))
+
+
+#Lasso Regression 
+
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report
+
+model = LogisticRegression(
+    penalty="l1",
+    solver="liblinear",
+    max_iter=1000
+)
+
+model.fit(X_train_scaled, y_train)
+
+y_pred = model.predict(X_test_scaled)
+
+print("L1 Regularization Accuracy:", accuracy_score(y_test, y_pred))
+print(classification_report(y_test, y_pred))
+
+
+#Ridge Regression
+
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report
+
+model = LogisticRegression(
+    penalty="l2",
+    solver="lbfgs",
+    max_iter=1000
+)
+
+model.fit(X_train_scaled, y_train)
+
+y_pred = model.predict(X_test_scaled)
+
+print("L2 Regularization Accuracy:", accuracy_score(y_test, y_pred))
+print(classification_report(y_test, y_pred))
